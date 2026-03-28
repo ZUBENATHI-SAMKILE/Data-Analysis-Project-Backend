@@ -102,7 +102,7 @@ router.get("/:id/charts", (req, res) => {
     };
 
   } else if (req.params.id === "iris") {
-    const speciesColors = {"Iris-setosa":"setosa","Iris-versicolor":"versicolor","Iris-virginica":"virginica"};
+    const speciesColors = {"Iris- setosa":"setosa","Iris- versicolor":"versicolor","Iris- virginica":"virginica"};
     const species = Object.keys(speciesColors);
     charts.sepal_scatter = {
       type: "scatter",
