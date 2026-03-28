@@ -15,9 +15,25 @@ const PORT = process.env.PORT || 4000;
 
 app.use(helmet());
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:5173",
-  methods: ["GET", "POST", "DELETE"],
-  allowedHeaders: ["Content-Type"],
+  origin: (origin, callback) => {
+    const allowed = [
+      'http://localhost:5173',
+      'http://localhost:3000',
+      (process.env.FRONTEND_URL || '').replace(/\/$/, ''),
+    ].filter(Boolean)
+
+    if (!origin) return callback(null, true)
+
+    if (allowed.includes(origin.replace(/\/$/, ''))) {
+      callback(null, true)
+    } else {
+      console.log('CORS blocked:', origin)
+      callback(new Error(`CORS: origin ${origin} not allowed`))
+    }
+  },
+  methods: ['GET', 'POST', 'DELETE'],
+  allowedHeaders: ['Content-Type'],
+  credentials: false,
 }));
 app.use(express.json());
 app.use(morgan("dev"));
