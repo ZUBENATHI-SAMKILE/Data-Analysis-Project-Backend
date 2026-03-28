@@ -75,6 +75,15 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "Internal server error", message: err.message });
 });
 
+if (process.env.NODE_ENV !== 'development') {
+  const BACKEND_URL = process.env.RENDER_EXTERNAL_URL || `http://localhost:${PORT}`
+  setInterval(() => {
+    fetch(`${BACKEND_URL}/api/health`)
+      .then(() => console.log('Keep-alive ping sent'))
+      .catch(err => console.log('Keep-alive failed:', err.message))
+  }, 14 * 60 * 1000) 
+}
+
 app.listen(PORT, () => {
   console.log(`\n🚀 DataSphere API running at http://localhost:${PORT}`);
   console.log(`   Health: http://localhost:${PORT}/api/health`);
